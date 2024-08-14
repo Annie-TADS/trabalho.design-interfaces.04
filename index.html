@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalho de APIs</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Aproxime, Pesquise, Investigue</h1>
+    </header>
+    <main>
+        <section class="section-one">
+            <h2>Seção 1</h2>
+            <form>
+                <label for="cep">CEP</label>
+                <input name="cep" id="cep" type="text" placeholder="Digite o cep...">
+                <button type="button" onclick="buscarCep()">Pesquisar</button>
+            </form>
+            <form>
+                <label for="cnpj" >CNPJ</label>
+                <input name="cnpj" id="cnpj" type="text" placeholder="Digite o cnpj...">
+                <button type="button" onclick="buscarCnpj()">Pesquisar</button>
+            </form>
+            <form>
+                <label for="banco001" >Banco (cód 001)</label>
+                <input name="banco001" id="banco001" type="text" disabled placeholder="Espere a resposta...">
+            </form>
+            <form>
+                <label for="idRioGrande" >Id (Rio Grande - RS)</label>
+                <input name="idRioGrande" id="idRioGrande" type="text" disabled placeholder="Espere a resposta...">
+            </form>
+        </section>
+        <section class="section-two">
+            <h2>Seção 2</h2>
+            <div class="button-container">
+                <button type="button">Show All</button>
+                <button type="button">Race All</button>
+            </div>
+        </section>
+        <section class="section-dump">
+            <h2>Retornos das APIs</h2>
+            <textarea disabled id="responseDump" placeholder="Aqui será exibido o retorno das pesquisas às APIs..."></textarea>
+        </section>
+    </main>
+    <script src="./js/script.js" ></script>
+</body>
+</html>
