@@ -1,7 +1,8 @@
 const BRASIL_API = "https://brasilapi.com.br/api";
 const MENSAGEM_ERRO_PADRAO = "HOUVE UM ERRO NA PESQUISA";
 const MARCAS_CARRO_API = "https://parallelum.com.br/fipe/api/v1/carros/marcas";
-const PESSOA_SWAPI = "https://swapi.dev/api/people/"
+const PESSOA_SWAPI = "https://swapi.dev/api/people"
+const PLACEHOLDER_API = "https://jsonplaceholder.typicode.com/posts/";
 
 const responseDump = document.getElementById("responseDump");
 
@@ -93,6 +94,96 @@ const buscarCnpj = async () => {
     }
 }
 
+const getSwapiUrl = () => {
+    const randomId = Math.ceil(Math.random() * 10);
+    return `${PESSOA_SWAPI}/${randomId}`;
+}
+
+const getCarrosUrl = () => {
+    return MARCAS_CARRO_API;
+}
+
+const getPlaceholderUrl = () => {
+    const randomId = Math.ceil(Math.random() * 50);
+    return `${PLACEHOLDER_API}/${randomId}`;
+}
+
+const buscarAPIsSimultaneamente = async () => {
+    try {
+        const responseSwapi = await executeFetch(getSwapiUrl());
+        const responseCarros = await executeFetch(getCarrosUrl());
+        const responsePlaceholder = await executeFetch(getPlaceholderUrl());
+
+        let mensagemDump = "Personagem de Star Wars aleatório: ";
+        if (!responseSwapi.name) {
+            mensagemDump += "Pessoa não encontrada\nMarca de carro aleatória: ";
+        } else {
+            mensagemDump += responseSwapi.name+"\nMarca de carro aleatória: ";
+        }
+        
+        const randomCarroId = Math.floor(Math.random()*responseCarros.length);
+        if (!responseCarros[randomCarroId]?.nome) {
+            mensagemDump += "Carro não encontrado\nPalavras aleatórias: ";
+        } else {
+            mensagemDump += responseCarros[randomCarroId].nome+"\nPalavras aleatórias: ";
+        }
+        if (!responsePlaceholder.title) {
+            mensagemDump += "Palavras não encontradas";
+        } else {
+            mensagemDump += responsePlaceholder.title;
+        }
+
+        responseDump.value = mensagemDump;
+    } catch (error) {
+        responseDump.value = error.message;
+    }
+}
+
+const buscarAPIsEmCorrida = async () => {
+    const urls = [getSwapiUrl(), getCarrosUrl(), getPlaceholderUrl()];
+    const response = await executeRace(urls);
+
+    if (Array.isArray(response)) {
+        const randomCarroId = Math.floor(Math.random()*response.length);
+        if (response[randomCarroId]?.nome) {
+            responseDump.value = "API de Carros respondeu primeiro!\nMarca: "+response[randomCarroId].nome;
+        } else if (response.name) {
+            responseDump.value = "API de Star Wars respondeu primeiro!\nPersonagem: "+response.name;
+        } else if (response.title) {
+            responseDump.value = "API de Placeholder respondeu primeiro!\nTitulo: "+response.title;
+        } else {
+            responseDump.value = "HOUVE ALGUM ERRO NA RESPOSTA";
+        }
+    }
+}
+
+const executeFetch = async (url) => {
+    return await fetch(url)
+        .then(async (response) => {
+            return response.json();
+        }).catch((err) => {
+            console.log(err);
+            throw new Error(MENSAGEM_ERRO_PADRAO);
+        })
+}
+
+const executeRace = async (urls) => {
+    const fetches = [];
+    urls.forEach(url => {
+        fetches.push(
+            executeFetch(url)
+        )
+    });
+
+    return await Promise.race(fetches)
+    .then(async (response) => {
+        return response;
+    }).catch((err) => {
+        console.log(err);
+        throw new Error(MENSAGEM_ERRO_PADRAO);
+    })
+}
+
 const getInputCep = () => {
     const inputCep = document.getElementById("cep");
     let cep = inputCep.value;
@@ -119,33 +210,6 @@ const getInputCnpj = () => {
         inputCnpj.classList.remove("invalid-input");
         return cnpj.replace(/\D/gi, "");
     }
-}
-
-const executeFetch = async (url) => {
-    return await fetch(url)
-        .then(async (response) => {
-            return response.json();
-        }).catch((err) => {
-            console.log(err);
-            throw new Error(MENSAGEM_ERRO_PADRAO);
-        })
-}
-
-const executeRace = async (urls) => {
-    const fetches = [];
-    urls.forEach(url => {
-        fetches.push(
-            new Promise(executeFetch(url))
-        )
-    });
-
-    return await Promise.race(fetches)
-    .then(async (response) => {
-        return response.json();
-    }).catch((err) => {
-        console.log(err);
-        throw new Error(MENSAGEM_ERRO_PADRAO);
-    })
 }
 
 buscarBanco001();
