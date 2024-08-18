@@ -147,13 +147,13 @@ const buscarAPIsEmCorrida = async () => {
         const randomCarroId = Math.floor(Math.random()*response.length);
         if (response[randomCarroId]?.nome) {
             responseDump.value = "API de Carros respondeu primeiro!\nMarca: "+response[randomCarroId].nome;
-        } else if (response.name) {
-            responseDump.value = "API de Star Wars respondeu primeiro!\nPersonagem: "+response.name;
-        } else if (response.title) {
-            responseDump.value = "API de Placeholder respondeu primeiro!\nTitulo: "+response.title;
-        } else {
-            responseDump.value = "HOUVE ALGUM ERRO NA RESPOSTA";
         }
+    } else if (response.name) {
+            responseDump.value = "API de Star Wars respondeu primeiro!\nPersonagem: "+response.name;
+    } else if (response.title) {
+            responseDump.value = "API de Placeholder respondeu primeiro!\nTitulo: "+response.title;
+    } else {
+            responseDump.value = "HOUVE ALGUM ERRO NA RESPOSTA";
     }
 }
 
